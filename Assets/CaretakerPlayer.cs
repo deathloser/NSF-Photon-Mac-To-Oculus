@@ -106,7 +106,7 @@ public class CaretakerPlayer : MonoBehaviour
         }
 
         
-        MoveThePlayer();
+        // MoveThePlayer();
         CameraFollow();
         
         

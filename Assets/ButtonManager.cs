@@ -20,8 +20,8 @@ public class ButtonManager : MonoBehaviour
 
     public GameObject canvas;
     public GameObject button_prefab;
-    public GameObject character;
-    public GameObject timmy;
+    GameObject character;
+    GameObject timmy;
     public TextAsset audio_csv;
     public string keep;
     Dictionary<string, int> field_map = new Dictionary<string, int>();
@@ -43,17 +43,17 @@ public class ButtonManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        // if (character) {
-        //     Debug.Log("it is found");
-        // } else {
-        //     Debug.Log("not found");
-        // }
+        if (character) {
+            Debug.Log("it is found");
+        } else {
+            Debug.Log("not found");
+        }
     }
 
     [PunRPC]
     void ChatMessage(String audioName)
     {
-        // character = GameObject.Find("PatientPrefab(Clone)");
+        character = GameObject.Find("PatientPrefab(Clone)");
         Debug.Log(string.Format("ChatMessage: " + audioName));
         Debug.Log("playing clip");
         AudioSource track1 = character.GetComponent<AudioSource>();
@@ -140,6 +140,7 @@ public class ButtonManager : MonoBehaviour
             //if animation or emote is present in the dictionary for this audio clip then it will call it
             if (anim_map[audioName+".wav"] != ""){
                 playAnimation(audioName);
+                photonView.RPC("playAnimation", RpcTarget.All, audioName);
             }
             // if (emote_map[audioName+".wav"] != ""){
             //     playEmote(audioName);
@@ -154,8 +155,15 @@ public class ButtonManager : MonoBehaviour
             emote_map.Add(cur_fields[field_map["filename"]], cur_fields[field_map["emote"]]);
         }
         //plays the animation or emote if called
+        [PunRPC]
         void playAnimation(String x){
-            timmy.GetComponent<Animator>().CrossFade(anim_map[x+".wav"], 0.04f);
+            timmy = GameObject.Find("Ch09_nonPBR");
+            if (timmy) {
+                Debug.Log("timmy is found");
+            }
+            timmy.GetComponent<Animator>().CrossFade("Silly Dancing", 0.04f);
+            // timmy.GetComponent<Animator>().CrossFade(anim_map[x+".wav"], 0.04f);
+            
         }
 
         // void playEmote(String x){
