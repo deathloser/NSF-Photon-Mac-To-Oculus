@@ -21,6 +21,7 @@ public class ButtonManager : MonoBehaviour
     public GameObject canvas;
     public GameObject button_prefab;
     public GameObject character;
+    public GameObject timmy;
     public TextAsset audio_csv;
     public string keep;
     Dictionary<string, int> field_map = new Dictionary<string, int>();
@@ -33,6 +34,7 @@ public class ButtonManager : MonoBehaviour
         List<gui_button> buttons = load_csv(keep.ToLower());
         canvas = GameObject.Find("Canvas");
         character = GameObject.Find("PatientPrefab(Clone)");
+        timmy = GameObject.Find("Ch09_nonPBR");
         create_buttons(buttons);
         photonView = GetComponent<PhotonView>();
         
@@ -51,7 +53,7 @@ public class ButtonManager : MonoBehaviour
     [PunRPC]
     void ChatMessage(String audioName)
     {
-        character = GameObject.Find("PatientPrefab(Clone)");
+        // character = GameObject.Find("PatientPrefab(Clone)");
         Debug.Log(string.Format("ChatMessage: " + audioName));
         Debug.Log("playing clip");
         AudioSource track1 = character.GetComponent<AudioSource>();
@@ -136,9 +138,9 @@ public class ButtonManager : MonoBehaviour
             photonView.RPC("ChatMessage", RpcTarget.All, audioName);
 
             //if animation or emote is present in the dictionary for this audio clip then it will call it
-            // if (anim_map[audioName+".wav"] != ""){
-            //     playAnimation(audioName);
-            // }
+            if (anim_map[audioName+".wav"] != ""){
+                playAnimation(audioName);
+            }
             // if (emote_map[audioName+".wav"] != ""){
             //     playEmote(audioName);
             // }
@@ -153,7 +155,7 @@ public class ButtonManager : MonoBehaviour
         }
         //plays the animation or emote if called
         void playAnimation(String x){
-            // character.GetComponent<Animator>().CrossFade(anim_map[x+".wav"], 0.04f);
+            timmy.GetComponent<Animator>().CrossFade(anim_map[x+".wav"], 0.04f);
         }
 
         // void playEmote(String x){
